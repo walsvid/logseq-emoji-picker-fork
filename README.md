@@ -1,6 +1,6 @@
 ## Repository description
 
-The code is borrowed from [logseq-emoji-picker](https://github.com/logseq/logseq-plugin-samples/tree/master/logseq-emoji-picker).
+This repository is a fork. The code is borrowed from [logseq-emoji-picker](https://github.com/logseq/logseq-plugin-samples/tree/master/logseq-emoji-picker).
 
 The purpose of this code repository is to package and upload to the [marketplace](https://github.com/logseq/marketplace), in order to solve [this issue](https://github.com/logseq/logseq/issues/5816).
 
