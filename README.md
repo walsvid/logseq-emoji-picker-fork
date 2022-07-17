@@ -8,6 +8,12 @@ Thanks to everyone in the community for their contributions.
 
 We will explore whether logseq can officially maintain this plugin in the future.
 
+## News
+- 2022-07-18
+  - upgrade from `emoji-button` to `picmo`
+  - support newer versions of emoji
+  - support custom emoji
+
 ---
 
 ## Emoji Picker Sample
@@ -35,12 +41,13 @@ This is picker sample that show you how to use slash command and position popup 
 - select this sample directory to load it
 
 ---
+
 ## Logseq Plugin Samples
 
 This repository contains sample code illustrating the Logseq Plugin API. You can read, play with or adapt from these
 samples to create your own plugins.
 
-Plugin APIs: https://plugins-doc.logseq.com
+Plugin APIs: <https://plugins-doc.logseq.com>
 
 ### Prerequisites
 
