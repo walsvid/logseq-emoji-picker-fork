@@ -1,6 +1,6 @@
 {
   "name": "logseq-emoji-picker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A joyful emoji picker from Logseq slash command 🚀",
   "main": "dist/index.html",
   "author": "walsvid",
@@ -19,11 +19,11 @@
   },
   "logseq": {
     "id": "_walsvid-logseq_emoji_picker",
+    "title": "Emoji Picker",
     "icon": "./logo.png"
   },
   "dependencies": {
-    "@joeattardi/emoji-button": "^4.6.4",
-    "@picmo/popup-picker": "^5.2.0",
-    "picmo": "^5.2.0"
+    "@picmo/popup-picker": "^5.8.1",
+    "picmo": "^5.8.1"
   }
 }

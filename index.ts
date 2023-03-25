@@ -1,54 +1,69 @@
 import '@logseq/libs'
+import { SettingSchemaDesc } from '@logseq/libs/dist/LSPlugin.user';
 import { createPopup } from '@picmo/popup-picker'
-import { darkTheme, lightTheme } from 'picmo'
+import { autoTheme, darkTheme, lightTheme } from 'picmo'
 /**
  * main entry
  */
 async function main() {
-  const appUserConfig = await logseq.App.getUserConfigs()
   const emojiPickerEl = document.createElement('div')
   emojiPickerEl.classList.add('emoji-picker-trigger')
   document.getElementById('app').appendChild(emojiPickerEl)
 
+  const customEmoji = [
+    {
+      emoji: 'doge',
+      label: 'Doge',
+      url: 'https://i.imgur.com/HeGEEbu.jpeg',
+      tags: ['dog', 'doge', 'meme'],
+      data: { id: 1 }
+    },
+    {
+      emoji: 'logseq',
+      label: 'Logseq',
+      url: 'https://raw.githubusercontent.com/logseq/logseq/master/resources/icons/logseq.png',
+      tags: ['logo', 'logseq'],
+      data: { id: 2 }
+    },
+    {
+      emoji: 'nyancat',
+      label: 'Nyan cat',
+      url: 'https://i.imgur.com/MjeqeUP.gif',
+      tags: ['cat', 'rainbow', 'meme'],
+      data: { id: 3 }
+    },
+    {
+      emoji: 'partyparrot',
+      label: 'party parrot',
+      url: 'https://i.imgur.com/XQrvNBV.gif',
+      tags: ['party', 'parrot', 'meme'],
+      data: { id: 4 }
+    }
+  ]
+
+  let emojiSelected = false
   let picker = null
-  let makePicker = () => {
+  let makePicker = async (themeChanged = false) => {
+    if (picker && themeChanged) {
+      picker.destroy()
+      picker = null
+    }
     if (picker) {
       return picker
-    }
+    }  
+
     let themeMap = { 'dark': darkTheme, 'light': lightTheme }
-    const customEmoji = [
-      {
-        emoji: 'doge',
-        label: 'Doge',
-        url: 'https://i.imgur.com/HeGEEbu.jpeg',
-        tags: ['dog', 'doge', 'meme'],
-        data: { id: 1 }
-      },
-      {
-        emoji: 'logseq',
-        label: 'Logseq',
-        url: 'https://raw.githubusercontent.com/logseq/logseq/master/resources/icons/logseq.png',
-        tags: ['logo', 'logseq'],
-        data: { id: 2 }
-      },
-      {
-        emoji: 'nyancat',
-        label: 'Nyan cat',
-        url: 'https://i.imgur.com/MjeqeUP.gif',
-        tags: ['cat', 'rainbow', 'meme'],
-        data: { id: 3 }
-      },
-      {
-        emoji: 'partyparrot',
-        label: 'party parrot',
-        url: 'https://i.imgur.com/XQrvNBV.gif',
-        tags: ['party', 'parrot', 'meme'],
-        data: { id: 4 }
-      }
-    ]
+    const logseqTheme = await logseq.App.getStateFromStore<'dark' | 'light'>('ui/theme')
+
+    if(logseq.settings.customEmojiSettings === undefined){
+      logseq.updateSettings({
+        customEmojiSettings: customEmoji,
+      });
+    }
+
     picker = createPopup({
-      theme: themeMap[appUserConfig.preferredThemeMode],
-      custom: customEmoji,
+      theme: themeMap[logseqTheme],
+      custom: logseq.settings.customEmojiSettings,
       autoFocusSearch: true,
       animate: false,
     }, {
@@ -59,6 +74,7 @@ async function main() {
     })
 
     picker.addEventListener('emoji:select', async (selection) => {
+      emojiSelected = true
       logseq.hideMainUI()
       if (selection.url) {
         const img = document.createElement('img')
@@ -82,13 +98,33 @@ async function main() {
     }, false)
 
     document.addEventListener('click', (e) => {
-      if (!(e.target as HTMLElement).closest('div[class*="EmojiPicker_picker"]')) {
+      if (!(e.target as HTMLElement).closest('div[class*="picmo__popupContainer"]') && !emojiSelected) {
         logseq.hideMainUI({ restoreEditingCursor: true })
       }
+      emojiSelected = false
     })
 
     return picker
   }
+
+  const schema:Array<SettingSchemaDesc> = [
+    {
+      key:"customEmojiSettings",
+      type:"object",
+      default: customEmoji,
+      title:"Custom Emoji Settings",
+      description:"Add custom emoji in json config (reload plugin to take effect).",
+    }
+  ];
+  logseq.useSettingsSchema(schema)
+
+  logseq.App.onThemeModeChanged( async () => {
+    if (picker) {
+      picker.destroy()
+      picker = null
+    }
+    await makePicker(true)
+  })
 
   logseq.Editor.registerSlashCommand(
     '😀 Emoji picker', async () => {
@@ -97,10 +133,12 @@ async function main() {
         top: top + rect.top + 'px',
         left: left + rect.left + 'px',
       })
+      
+      picker = await makePicker()
       logseq.showMainUI()
 
       setTimeout(() => {
-        makePicker().open()
+        picker.open()
       }, 100)
     },
   )
