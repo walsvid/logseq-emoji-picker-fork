@@ -24,6 +24,10 @@ This is picker sample that show you how to use slash command and position popup 
 
 ![demo](./demo.gif)
 
+### Adding a Custom Emoji (Hosted Online)
+
+https://user-images.githubusercontent.com/55474996/227746263-eb160595-928b-4558-a63a-33221c8c6177.mp4
+
 ### API
 
 [![npm version](https://badge.fury.io/js/%40logseq%2Flibs.svg)](https://badge.fury.io/js/%40logseq%2Flibs)
