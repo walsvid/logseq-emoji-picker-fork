@@ -43,11 +43,7 @@ async function main() {
 
   let emojiSelected = false
   let picker = null
-  let makePicker = async (themeChanged = false) => {
-    if (picker && themeChanged) {
-      picker.destroy()
-      picker = null
-    }
+  let makePicker = async () => {
     if (picker) {
       return picker
     }  
@@ -86,12 +82,11 @@ async function main() {
       } else {
         await logseq.Editor.insertAtEditingCursor(selection.emoji)
       }
-
     })
 
     //ESC
     document.addEventListener('keydown', function (e) {
-      if (e.keyCode === 27) {
+      if (e.key === "Escape") {
         logseq.hideMainUI({ restoreEditingCursor: true })
       }
       e.stopPropagation()
@@ -103,7 +98,6 @@ async function main() {
       }
       emojiSelected = false
     })
-
     return picker
   }
 
@@ -119,11 +113,10 @@ async function main() {
   logseq.useSettingsSchema(schema)
 
   logseq.App.onThemeModeChanged( async () => {
-    if (picker) {
-      picker.destroy()
-      picker = null
-    }
-    await makePicker(true)
+    let themeMap = { 'dark': darkTheme, 'light': lightTheme }
+    const logseqTheme = await logseq.App.getStateFromStore<'dark' | 'light'>('ui/theme')
+    let theme = themeMap[logseqTheme]
+    picker.picker.updateOptions({ theme })
   })
 
   logseq.Editor.registerSlashCommand(
