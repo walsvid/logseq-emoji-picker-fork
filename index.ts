@@ -62,6 +62,7 @@ async function main() {
       custom: logseq.settings.customEmojiSettings,
       autoFocusSearch: true,
       animate: false,
+      initialCategory: 'recents',
     }, {
       triggerElement: emojiPickerEl,
       referenceElement: emojiPickerEl,
