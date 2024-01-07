@@ -35,7 +35,7 @@ async function main() {
     {
       emoji: 'partyparrot',
       label: 'party parrot',
-      url: 'https://i.imgur.com/XQrvNBV.gif',
+      url: 'https://i.imgur.com/IJsMwM4.gif',
       tags: ['party', 'parrot', 'meme'],
       data: { id: 4 }
     }
